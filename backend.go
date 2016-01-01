@@ -31,36 +31,64 @@ type TodoController struct {
 	session *mgo.Session
 }
 
+func NewTodoController(s *mgo.Session) *TodoController {
+	return &TodoController{s}
+}
+
 func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	log.Println("GetTodo")
 	// get parameter "id"
 	id := p.ByName("id")
-	log.Println(id)
+
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	oid := bson.ObjectIdHex(id)
-	log.Println(oid)
 	te := Todo{}
-	log.Println(te)
 
-	if err := tc.session.DB("TodoList").C("Todos").Find(oid).One(&te); err != nil {
+	if err := tc.session.DB("TodoList").C("Todos").FindId(oid).One(&te); err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		log.Println(oid, " not found")
 		return
 	}
-	log.Println(te)
 	tej, _ := json.Marshal(te)
-	log.Println("tej")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	fmt.Fprintf(w, "%s", tej)
 }
+func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	// get parameter "id"
+	id := p.ByName("id")
 
-func (tc TodoController) PostTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 
+	oid := bson.ObjectIdHex(id)
+
+	if err := tc.session.DB("TodoList").C("Todos").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(200)
+}
+
+func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	te := Todo{}
+
+	json.NewDecoder(r.Body).Decode(&te)
+	new_te := NewTodo(te.Name)
+	log.Printf("te = %+v\n", new_te)
+
+	tc.session.DB("TodoList").C("Todos").Insert(new_te)
+
+	tej, _ := json.Marshal(new_te)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	fmt.Fprintf(w, "%s", tej)
 }
 
 func (tc TodoController) GetAllTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -73,7 +101,6 @@ func (tc TodoController) GetAllTodo(w http.ResponseWriter, r *http.Request, _ ht
 	if err := tc.session.DB("TodoList").C("Todos").Find(nil).All(&todos); err != nil {
 		// If not data respond with no content and exit
 		w.WriteHeader(http.StatusNoContent)
-		log.Println("No Content")
 		return
 	}
 
@@ -85,10 +112,6 @@ func (tc TodoController) GetAllTodo(w http.ResponseWriter, r *http.Request, _ ht
 	// set status header to 200
 	w.WriteHeader(200)
 	fmt.Fprintf(w, "%s", todosj)
-}
-
-func NewTodoController(s *mgo.Session) *TodoController {
-	return &TodoController{s}
 }
 
 // Get a session with the MongoDB
@@ -105,38 +128,12 @@ func main() {
 	t1 := NewTodo("Gasflasche")
 	t2 := NewTodo("Bierkasten")
 	tc := NewTodoController(getSession())
+	// tc.session.DB("TodoList").C("Todos").DropCollection()
 	tc.session.DB("TodoList").C("Todos").Insert(t1, t2)
 	r.GET("/todo/:id", tc.GetTodo)
 	r.GET("/todo", tc.GetAllTodo)
-	// r.POST("/todo", tc.PostTodo)
-	// r.DELETE("/todo/:id", tc.DeleteTodo)
-
-	// 	r.GET("/todo/:id", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	// 	t := Todo{
-	// 		Created: time.Now().UnixNano(),
-	// 		Name:    "Kuchen",
-	// 		Done:    false,
-	// 	}
-	// 	tj, _ := json.Marshal(t)
-	// 	w.Header().Set("Content-Type", "application/json")
-	// 	w.WriteHeader(200)
-	// 	fmt.Fprintf(w, "%s", tj)
-	// })
-	// r.POST("/todo", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	// 	t := Todo{}
-	// 	json.NewDecoder(r.Body).Decode(&t)
-	// 	// Marshal provided interface into JSON structure
-	// 	tj, _ := json.Marshal(t)
-	// 	// Write content-type, statuscode, payload
-	// 	w.Header().Set("Content-Type", "application/json")
-	// 	w.WriteHeader(201)
-	// 	fmt.Fprintf(w, "%s", tj)
-	// })
-	// r.DELETE("/todo/:id", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	// 	w.WriteHeader(201)
-	// })
-
+	r.POST("/todo", tc.CreateTodo)
+	r.DELETE("/todo/:id", tc.DeleteTodo)
 	log.Println("ListenAndServe localhost:8080")
 	http.ListenAndServe("localhost:8080", r)
-
 }

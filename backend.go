@@ -35,6 +35,30 @@ func NewTodoController(s *mgo.Session) *TodoController {
 	return &TodoController{s}
 }
 
+func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	// get parameter "id"
+	id := p.ByName("id")
+
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	oid := bson.ObjectIdHex(id)
+	te := Todo{}
+
+	json.NewDecoder(r.Body).Decode(&te)
+
+	if err := tc.session.DB("TodoList").C("Todos").UpdateId(oid, te); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	tej, _ := json.Marshal(te)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	fmt.Fprintf(w, "%s", tej)
+}
+
 func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// get parameter "id"
 	id := p.ByName("id")
@@ -49,7 +73,6 @@ func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httpr
 
 	if err := tc.session.DB("TodoList").C("Todos").FindId(oid).One(&te); err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		log.Println(oid, " not found")
 		return
 	}
 	tej, _ := json.Marshal(te)
@@ -57,6 +80,7 @@ func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httpr
 	w.WriteHeader(200)
 	fmt.Fprintf(w, "%s", tej)
 }
+
 func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// get parameter "id"
 	id := p.ByName("id")
@@ -80,7 +104,6 @@ func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p ht
 
 	json.NewDecoder(r.Body).Decode(&te)
 	new_te := NewTodo(te.Name)
-	log.Printf("te = %+v\n", new_te)
 
 	tc.session.DB("TodoList").C("Todos").Insert(new_te)
 
@@ -134,6 +157,7 @@ func main() {
 	r.GET("/todo", tc.GetAllTodo)
 	r.POST("/todo", tc.CreateTodo)
 	r.DELETE("/todo/:id", tc.DeleteTodo)
+	r.PUT("/todo/:id", tc.UpdateTodo)
 	log.Println("ListenAndServe localhost:8080")
 	http.ListenAndServe("localhost:8080", r)
 }

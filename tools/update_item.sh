@@ -1,0 +1,1 @@
+curl -X PUT -H "Content-Type: application/json" -d '{"id":"5686419788d8e71954cb3ef3","created":1451639191877627021,"name":"Gasflasche","done":true}' http://127.0.0.1:8080/todo/5686419788d8e71954cb3ef3 -v 

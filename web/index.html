@@ -1,56 +1,43 @@
 <!DOCTYPE html>
 <html class=''>
+
 <head>
     <meta charset='UTF-8'>
     <meta name="robots" content="noindex">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.css">
-    <style></style>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
 </head>
 
-<body>
-    <body ng-app="httptest">
-        <div ng-controller="getjson">
-            <pre>
-      <div ng-bind="data | json"></div>
-    </pre>
-        </div>
+<body ng-app="todoApp">
 
-    <div>
-        <div ng-controller="MyController">
-                <div ng-repeat="d in data">
-                    <md-button class="md-raised">{{d.name}}</md-button>
-                </div>
-            </div>
-        </div>
-    </body>
+    <md-input-container>
+        <label>Title</label>
+        <input ng-model="search">
+    </md-input-container>
 
+    <md-list ng-controller="todoCtrl">
+        <md-list-item ng-repeat="todo in todos | filter:search">
+            <md-checkbox class="md-primary" ng-model="todo.done">
+            </md-checkbox>
+            <p>{{todo.name}}</p>
+        </md-list-item>
+    </md-list>
 
+        <md-list ng-controller="ResourceController">
+        <md-list-item ng-repeat="bla in blabla">
+            <p>{{bla.name}}</p>
+        </md-list-item>
+    </md-list>
 
     <!-- Angular Material Dependencies -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
-
-
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-resource.min.js"></script>
 
     <!-- Angular Material Javascript now available via Google CDN; version 0.11.2 used here -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+    <script src="app.js"></script>
 
-    
-<script>
-    var app = angular.module('httptest', ['ngMaterial']);
-    app.controller('getjson', [''$scope','$http',function ($scope, $http) {
-            $http.get('http://codepen.io/anon/pen/LVEwdw.js').success(function (res) {
-                $scope.data = res; 
-                               });
-                    }]);
-
-    app.controller('MyController', function ($scope, $http) {
-        $http.get('https://cdn.rawgit.com/Swimlane/angular-data-table/master/demos/data/100.json').success(function (data) {
-            $scope.data = data;
-        });
-    });
-</script>
 </body>
 
 </html>

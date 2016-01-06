@@ -55,6 +55,7 @@ func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p ht
 	}
 	tej, _ := json.Marshal(te)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 	fmt.Fprintf(w, "%s", tej)
 }
@@ -77,6 +78,7 @@ func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httpr
 	}
 	tej, _ := json.Marshal(te)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 	fmt.Fprintf(w, "%s", tej)
 }
@@ -96,6 +98,7 @@ func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p ht
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 }
 
@@ -110,6 +113,7 @@ func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p ht
 	tej, _ := json.Marshal(new_te)
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(201)
 	fmt.Fprintf(w, "%s", tej)
 }
@@ -131,6 +135,7 @@ func (tc TodoController) GetAllTodo(w http.ResponseWriter, r *http.Request, _ ht
 	todosj, _ := json.Marshal(todos)
 
 	// set header to JSON
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	// set status header to 200
 	w.WriteHeader(200)

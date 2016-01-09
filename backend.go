@@ -165,7 +165,7 @@ func main() {
 	tc := NewTodoController(getSession())
 	tc.session.DB("TodoList").C("Todos").DropCollection()
 	tc.session.DB("TodoList").C("Todos").Insert(t1, t2)
-	r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/www"))
+	r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/web"))
 	r.GET("/todo/:id", tc.GetTodo)
 	r.GET("/todo", tc.GetAllTodo)
 	r.POST("/todo", tc.CreateTodo)

@@ -1,26 +1,17 @@
-var app = angular.module('todoApp', ['ngMaterial', 'ngResource']);
+var app = angular.module('todoApp', ['ngMaterial', 'ngResource', 'ngMdIcons']);
+
 app.factory('TodoService', function ($resource) {
     return $resource('http://127.0.0.1:8080/todo/:id');
 });
 
-app.controller('ResourceController', function ($scope, Entry) {
-    $scope.todos = TodoService.query()
-	console.log($scope.todos);
-});
+app.controller('TodoCtrl', function ($scope, TodoService) {
+    $scope.todos = TodoService.query();
 
-
-app.controller('todoCtrl', function ($scope) {
-    $scope.todos = [
-        {
-            "id": "5686419788d8e71954cb3ef3",
-            "created": 1451639191877627021,
-            "name": "Gasflasche",
-            "done": true
-            }, {
-            "id": "5686419788d8e71954cb3ef4",
-            "created": 1451639191877627145,
-            "name": "Bierkasten",
-            "done": false
-            }
-    ];
+    $scope.ButtonClick = function () {
+        TodoService.save({ name: $scope.todoname});
+        $scope.message = $scope.todoname;
+        $scope.todoname = ''
+        $scope.todos = TodoService.query();
+    };
+    
 });

@@ -38,6 +38,7 @@ func NewTodoController(s *mgo.Session) *TodoController {
 func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// get parameter "id"
 	id := p.ByName("id")
+	log.Println("Update Todo: ", id)
 
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
@@ -56,6 +57,7 @@ func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p ht
 	tej, _ := json.Marshal(te)
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.WriteHeader(200)
 	fmt.Fprintf(w, "%s", tej)
 }
@@ -63,6 +65,7 @@ func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p ht
 func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// get parameter "id"
 	id := p.ByName("id")
+	log.Println("Get Todo: ", id)
 
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
@@ -86,6 +89,7 @@ func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httpr
 func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// get parameter "id"
 	id := p.ByName("id")
+	log.Println("Delete Todo: ", id)
 
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
@@ -103,10 +107,12 @@ func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p ht
 }
 
 func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	log.Println("New Todo ")
 	te := Todo{}
 
 	json.NewDecoder(r.Body).Decode(&te)
 	new_te := NewTodo(te.Name)
+	log.Println("New Todo: ", new_te)
 
 	tc.session.DB("TodoList").C("Todos").Insert(new_te)
 
@@ -114,6 +120,7 @@ func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p ht
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.WriteHeader(201)
 	fmt.Fprintf(w, "%s", tej)
 }
@@ -153,11 +160,12 @@ func getSession() *mgo.Session {
 
 func main() {
 	r := httprouter.New()
-	t1 := NewTodo("Gasflasche")
-	t2 := NewTodo("Bierkasten")
+	t1 := NewTodo("Deo")
+	t2 := NewTodo("Mini Hand Creme")
 	tc := NewTodoController(getSession())
-	// tc.session.DB("TodoList").C("Todos").DropCollection()
+	tc.session.DB("TodoList").C("Todos").DropCollection()
 	tc.session.DB("TodoList").C("Todos").Insert(t1, t2)
+	r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/www"))
 	r.GET("/todo/:id", tc.GetTodo)
 	r.GET("/todo", tc.GetAllTodo)
 	r.POST("/todo", tc.CreateTodo)

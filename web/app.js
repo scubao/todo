@@ -1,12 +1,11 @@
 var app = angular.module('todoApp', ['ngMaterial', 'ngResource']);
-app.factory('Entry', function ($resource) {
+app.factory('TodoService', function ($resource) {
     return $resource('http://127.0.0.1:8080/todo/:id');
 });
 
 app.controller('ResourceController', function ($scope, Entry) {
-    var blabla = Entry.query();
-    $scope.blabla = blabla;
-    console.log(blabla);
+    $scope.todos = TodoService.query()
+	console.log($scope.todos);
 });
 
 

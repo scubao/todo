@@ -1,9 +1,9 @@
 var app = angular.module('todoApp', ['ngMaterial', 'ngResource', 'ngMdIcons']);
 
 app.factory('TodoService', function ($resource) {
-    return $resource('http://127.0.0.1:8080/todo/:id', { id: '@id'  }, {
-        update: {
-            method: 'PUT' // a change request
+    return $resource('http://127.0.0.1:8080/todo/:id', {}, {
+        'update': {
+		method: 'PUT', params: {id: '@id'}
         }
     });
 });
@@ -28,13 +28,10 @@ app.controller('TodoCtrl', function ($scope, TodoService) {
     };
 
     $scope.UpdateTodo = function (todo) {
-        console.log(todo);
-/*
-        TodoService.update({
-            todo
-        });
+        console.log(todo.id);
+	id  = todo.id;
+       TodoService.update({id},{todo});
         $scope.todos = TodoService.query();
-*/
     };
 
 });

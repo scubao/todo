@@ -41,16 +41,18 @@ func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p ht
 	log.Println("Update Todo: ", id)
 
 	if !bson.IsObjectIdHex(id) {
+		log.Println("Is no MongoDB Id")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	oid := bson.ObjectIdHex(id)
 	te := Todo{}
-
+	log.Println("OID ", oid)
 	json.NewDecoder(r.Body).Decode(&te)
-
+	log.Printf("te = %+v\n", te)
 	if err := tc.session.DB("TodoList").C("Todos").UpdateId(oid, te); err != nil {
+		log.Println("Can't find that baby in collection.")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -173,4 +175,6 @@ func main() {
 	r.PUT("/todo/:id", tc.UpdateTodo)
 	log.Println("ListenAndServe localhost:8080")
 	http.ListenAndServe("localhost:8080", r)
+	// Do this below for SSL Encrypted Backend
+	// http.ListenAndServeTLS("localhost:8433", "server.pem", "server.key", r)
 }

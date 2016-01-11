@@ -108,11 +108,35 @@ func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p ht
 	w.WriteHeader(200)
 }
 
+func (tc TodoController) Delete2Todo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	// get parameter "id"
+	id := p.ByName("id")
+	log.Println("Delete 2 Todo: ", id)
+
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	oid := bson.ObjectIdHex(id)
+	te := Todo{}
+	json.NewDecoder(r.Body).Decode(&te)
+	log.Printf("te = %+v\n", te)
+
+	if err := tc.session.DB("TodoList").C("Todos").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(200)
+}
+
 func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	log.Println("New Todo ")
 	te := Todo{}
 
 	json.NewDecoder(r.Body).Decode(&te)
+    log.Println("Todo ", te)
 	new_te := NewTodo(te.Name)
 	log.Println("New Todo: ", new_te)
 
@@ -172,7 +196,8 @@ func main() {
 	r.GET("/todo", tc.GetAllTodo)
 	r.POST("/todo", tc.CreateTodo)
 	r.DELETE("/todo/:id", tc.DeleteTodo)
-	r.PUT("/todo/:id", tc.UpdateTodo)
+	// r.PUT("/todo/:id", tc.UpdateTodo)
+	r.PUT("/todo/:id", tc.Delete2Todo)
 	log.Println("ListenAndServe localhost:8080")
 	http.ListenAndServe("localhost:8080", r)
 	// Do this below for SSL Encrypted Backend

@@ -18,6 +18,8 @@
     "angular": "~1.4.8",
     "angular-material": "~1.0.1",
     "material-icons": "~0.1.0",
-    "angular-resource": "~1.4.8"
+    "angular-resource": "~1.4.8",
+    "bootstrap": "~3.3.6",
+    "restangular": "~1.5.1"
   }
 }

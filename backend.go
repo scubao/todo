@@ -132,11 +132,12 @@ func (tc TodoController) Delete2Todo(w http.ResponseWriter, r *http.Request, p h
 }
 
 func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	// Create empty Todo Object
 	log.Println("New Todo ")
 	te := Todo{}
 
 	json.NewDecoder(r.Body).Decode(&te)
-    log.Println("Todo ", te)
+	log.Println("Todo ", te)
 	new_te := NewTodo(te.Name)
 	log.Println("New Todo: ", new_te)
 
@@ -196,8 +197,8 @@ func main() {
 	r.GET("/todo", tc.GetAllTodo)
 	r.POST("/todo", tc.CreateTodo)
 	r.DELETE("/todo/:id", tc.DeleteTodo)
-	// r.PUT("/todo/:id", tc.UpdateTodo)
-	r.PUT("/todo/:id", tc.Delete2Todo)
+	r.PUT("/todo/:id", tc.UpdateTodo)
+	// r.PUT("/todo/:id", tc.Delete2Todo)
 	log.Println("ListenAndServe localhost:8080")
 	http.ListenAndServe("localhost:8080", r)
 	// Do this below for SSL Encrypted Backend

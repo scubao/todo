@@ -1,0 +1,15 @@
+{
+    "jscodehints.detectedExclusions": [
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/lodash/test/test-fp.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/lodash/test/test.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/lodash/perf/perf.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/lodash/test/saucelabs.js",
+        "/home/oliver/coding/gocode/src/todo/www/app/factory/todoFactory.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/jquery/src/attributes/prop.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/jquery/src/attributes/classes.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/jquery/src/attributes/support.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/jquery/src/attributes/attr.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/lodash/vendor/backbone/test/collection.js",
+        "/home/oliver/coding/gocode/src/todo/www/lib/static/lodash/vendor/backbone/test/model.js"
+    ]
+}

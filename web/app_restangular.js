@@ -1,25 +1,52 @@
-angular.module('todoApp', ['ngMaterial', 'restangular', 'ngMdIcons']);
+angular.module('todoApp', []);
 
-angular.module('todoApp').config(function (RestangularProvider) {
-    RestangularProvider.setRestangularFields({
-        id: "_id"
-    });
-});
+angular.module('todoApp').factory('todoFactory', ['$http', function ($http) {
+    var urlBase = '/todo';
+    var todoFactory = {};
 
-// Inject Restangular into your controller
-angular.module('todoApp').controller('TodoCtrl', function ($scope, Restangular) {
+    todoFactory.getTodos = function () {
+        return $http.get(urlBase);
+    };
 
-    //    var Todos = Restangular.all('http://127.0.0.1:8080/todo');
-    var Todos = Restangular.all('todo');
-    var allTodos = Todos.getList();
-    allTodos.then(function (data) {
-        $scope.todos = data;
-    })
+    todoFactory.deleteTodo = function (id) {
+        return $http.delete(urlBase + '/' + id);
+    }
 
-    $scope.AddTodo = function () {};
+    todoFactory.updateTodo = function (todo) {
+        return $http.put(urlBase + '/' + todo.id, todo)
+    }
 
-    $scope.DeleteTodo = function () {};
+    return todoFactory;
+}]);
 
-    $scope.UpdateTodo = function () {};
+angular.module('todoApp').controller('todoController', ['$scope', 'todoFactory', function ($scope, todoFactory) {
 
-});
+    $scope.todos;
+    $scope.status;
+
+    var todoItem = {};
+
+    getTodos();
+    updateTodo(todoItem);
+
+    function getTodos() {
+        todoFactory.getTodos()
+            .success(function (todos) {
+                $scope.todos = todos;
+            })
+            .error(function (error) {
+                $scope.status = 'Error loading Data: ' + error.message;
+            })
+    };
+
+    function updateTodo(todoItem) {
+        todoFactory.updateTodo(todoItem)
+            .success(function () {
+                $scope.status = 'todoItem Updated';
+            })
+            .error(function (error) {
+                $scope.status = 'Error ' + error.message;
+            })
+    };
+
+}]);

@@ -1,0 +1,19 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CreateTodo	backend.go	/^func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {$/;"	f
+Delete2Todo	backend.go	/^func (tc TodoController) Delete2Todo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {$/;"	f
+DeleteTodo	backend.go	/^func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {$/;"	f
+GetAllTodo	backend.go	/^func (tc TodoController) GetAllTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {$/;"	f
+GetTodo	backend.go	/^func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {$/;"	f
+NewTodo	backend.go	/^func NewTodo(name string) Todo {$/;"	f
+NewTodoController	backend.go	/^func NewTodoController(s *mgo.Session) *TodoController {$/;"	f
+Todo	backend.go	/^type Todo struct {$/;"	t
+TodoController	backend.go	/^type TodoController struct {$/;"	t
+UpdateTodo	backend.go	/^func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {$/;"	f
+getSession	backend.go	/^func getSession() *mgo.Session {$/;"	f
+main	backend.go	/^func main() {$/;"	f
+main	backend.go	/^package main$/;"	p

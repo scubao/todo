@@ -20,6 +20,7 @@ myTodoList.controller('todoController', ['$scope', 'entryFactory', function ($sc
     $scope.addTodo = function(name) {
         entryFactory.createEntry(name)
             .then(function(response) {
+                $scope.todoName = '';
                     getAllTodos();
                 },
                 function (response) {

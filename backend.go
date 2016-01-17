@@ -169,11 +169,11 @@ func getSession() *mgo.Session {
 
 func main() {
 	r := httprouter.New()
-	t1 := NewTodo("Deo")
-	t2 := NewTodo("Mini Hand Creme")
+	// t1 := NewTodo("Deo")
+	// t2 := NewTodo("Mini Hand Creme")
 	tc := NewTodoController(getSession())
-	tc.session.DB("TodoList").C("Todos").DropCollection()
-	tc.session.DB("TodoList").C("Todos").Insert(t1, t2)
+	// tc.session.DB("TodoList").C("Todos").DropCollection()
+	// tc.session.DB("TodoList").C("Todos").Insert(t1, t2)
 	// r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/web"))
 	r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/www"))
 	r.GET("/todo/:id", tc.GetTodo)
@@ -183,7 +183,7 @@ func main() {
 	r.PUT("/todo/:id", tc.UpdateTodo)
 	// r.PUT("/todo/:id", tc.Delete2Todo)
 	log.Println("ListenAndServe localhost:8080")
-	http.ListenAndServe("localhost:8080", r)
+	http.ListenAndServe(":8080", r)
 	// Do this below for SSL Encrypted Backend
 	// http.ListenAndServeTLS("localhost:8433", "server.pem", "server.key", r)
 }

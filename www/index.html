@@ -1,39 +1,44 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en" ng-app="myTodoList">
-
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <!--    <link rel="stylesheet" href="style.css" />-->
-    <!--[if IE]>
-			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-			<![endif]-->
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="lib/static/angular-material/angular-material.css">
+    <title>TodoList</title>
 </head>
-
 <body>
 
-    <div ng-controller="todoController">
-        Status {{ $scope.status }}
-        <ul>
-            <li ng-repeat="todo in todos">
-                <input type="checkbox" ng-model="todo.done" ng-click="updateTodo(todo)">{{todo.id}} {{todo.name}} {{todo.done}} <button ng-click="deleteTodo(todo.id)">Del</button>
-            </li>
-        </ul>
+<div ng-controller="todoController">
 
-        <input type="text" ng-model="todoName"/><button ng-click="addTodo(todoName)">Add</button> {{ $scope.todoName}}
+    <md-input-container>
+        <label>Add</label>
+        <input ng-model="todoName" ng-keyup="$event.keyCode == 13 && addTodo(todoName)" >
+    </md-input-container>
 
-        <br>
+    <md-list>
+        <md-list-item ng-repeat="todo in todos">
+            <md-checkbox class="md-primary" ng-model="todo.done"></md-checkbox>
+            {{todo.name}}
+            <md-button class="md-secondary" aria-label="Delete Button" ng-click="deleteTodo(todo.id)">
+                <ng-md-icon icon="delete"></ng-md-icon>
+            </md-button>
+            <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+    </md-list>
 
+</div>
 
+<script src="lib/static/angular/angular.js"></script>
 
-    </div>
+<script src="lib/static/angular-animate/angular-animate.js"></script>
+<script src="lib/static/angular-aria/angular-aria.js"></script>
+<script src="lib/static/angular-messages/angular-messages.js"></script>
+<!-- Angular Material Library -->
+<script src="lib/static/angular-material/angular-material.js"></script>
+<script src="lib/static/angular-material-icons/angular-material-icons.js"></script>
 
-    <script src="lib/static/angular/angular.js"></script>
-    <script src="app/app.js"></script>
-    <script src="app/factory/todoFactory.js"></script>
-    <script src="app/controller/todoController.js"></script>
+<script src="app/app.js"></script>
+<script src="app/factory/todoFactory.js"></script>
+<script src="app/controller/todoController.js"></script>
 
 </body>
-
 </html>

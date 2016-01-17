@@ -1,1 +1,1 @@
-var myTodoList = angular.module('myTodoList',[]);
+var myTodoList = angular.module('myTodoList', ['ngMaterial','ngMdIcons']);

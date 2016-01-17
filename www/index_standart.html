@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html lang="en" ng-app="myTodoList">
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <!--    <link rel="stylesheet" href="style.css" />-->
+    <!--[if IE]>
+			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+			<![endif]-->
+</head>
+
+<body>
+
+    <div ng-controller="todoController">
+        Status {{ $scope.status }}
+        <ul>
+            <li ng-repeat="todo in todos">
+                <input type="checkbox" ng-model="todo.done" ng-click="updateTodo(todo)">{{todo.id}} {{todo.name}} {{todo.done}} <button ng-click="deleteTodo(todo.id)">Del</button>
+            </li>
+        </ul>
+
+        <input type="text" ng-model="todoName"/><button ng-click="addTodo(todoName)">Add</button> {{ $scope.todoName}}
+
+        <br>
+
+
+
+    </div>
+
+    <script src="lib/static/angular/angular.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/factory/todoFactory.js"></script>
+    <script src="app/controller/todoController.js"></script>
+
+</body>
+
+</html>

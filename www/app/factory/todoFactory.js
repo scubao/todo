@@ -1,14 +1,29 @@
-myTodoList.factory('todoFactory',['$http', function($http) {
- 
-    console.log("todoFactory used.");
+myTodoList.factory('entryFactory',['$http', function($http) {
 
-    var urlBase = "http://localhost:8080/todo";
-    var todoFactory = {};
+    var urlBase = "http://127.0.0.1:8080/todo";
+    var entryFactory = {};
     
-    todoFactory.getAllTodos = function () {
+    entryFactory.getEntries = function () {
         return $http.get(urlBase);
     };
+
+    entryFactory.getEntry = function (id) {
+        return $http.get(urlBase+'/'+id);
+    };
+
+    entryFactory.createEntry = function (name) {
+        var todoentry = {name: name};
+        return $http.post(urlBase, todoentry);
+    };
+
+    entryFactory.updateEntry = function (entry) {
+        return $http.put(urlBase + '/' + entry.id, entry)
+    };
+
+    entryFactory.deleteEntry = function (id) {
+        return $http.delete(urlBase + '/' + id);
+    };
     
-    return todoFactory;
+    return entryFactory;
     
 }]);

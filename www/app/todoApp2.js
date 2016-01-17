@@ -17,7 +17,7 @@ angular.module('myTodoList').factory('todoFactory', ['$http', function ($http) {
 
 }]);
 
-angular.module('myTodoList').controller('todoController',['$scope','todoFactory', function ($scope,todoFactory) {
+angular.module('myTodoList').controller('todoController',['$scope','entryFactory', function ($scope, todoFactory) {
     $scope.todos = todos;
     $scope.status = "Hi";
 }]);

@@ -1,19 +1,53 @@
-myTodoList.controller('todoController', ['$scope', 'todoFactory', function ($scope, todoFactory) {
+myTodoList.controller('todoController', ['$scope', 'entryFactory', function ($scope, entryFactory) {
 
     $scope.todos;
-    $scope.status;
+
 
     getAllTodos();
 
     function getAllTodos() {
-        todoFactory.getAllTodos()
-            .success(function (todos) {
-                $scope.todos = todos;
-            })
-            .error(function (error) {
-                $scope.status = 'Unable to load customer data: ' + error.message;
-            });
+        entryFactory.getEntries()
+            .then(function (response) {
+                    $scope.todos = response.data;
+                },
+                function (response) {
+                    console.log("Error: " + response.status);
+                }
+            );
 
+    }
+
+    $scope.addTodo = function(name) {
+        entryFactory.createEntry(name)
+            .then(function(response) {
+                    getAllTodos();
+                },
+                function (response) {
+                    console.log("Error: " + response.status);
+                }
+            );
     };
+
+    $scope.deleteTodo = function(id) {
+        entryFactory.deleteEntry(id)
+            .then(function(response) {
+                    getAllTodos();
+                },
+                function (response) {
+                    console.log("Error: " + response.status);
+                }
+            );
+    };
+
+    $scope.updateTodo = function(todo) {
+        entryFactory.updateEntry(todo)
+            .then(function () {
+                getAllTodos();
+            },
+            function (error) {
+            $scope.status = 'Unable to update data: ' + error.message;
+        });
+
+    }
 
 }]);

@@ -36,6 +36,7 @@ func NewTodoController(s *mgo.Session) *TodoController {
 }
 
 func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	log.Println("UpdateTodo")
 	// get parameter "id"
 	id := p.ByName("id")
 	log.Println("Update Todo: ", id)
@@ -65,6 +66,7 @@ func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p ht
 }
 
 func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	log.Println("GetTodo")
 	// get parameter "id"
 	id := p.ByName("id")
 	log.Println("Get Todo: ", id)
@@ -89,6 +91,7 @@ func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httpr
 }
 
 func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	log.Println("DeleteTodo")
 	// get parameter "id"
 	id := p.ByName("id")
 	log.Println("Delete Todo: ", id)
@@ -108,36 +111,14 @@ func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p ht
 	w.WriteHeader(200)
 }
 
-func (tc TodoController) Delete2Todo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	// get parameter "id"
-	id := p.ByName("id")
-	log.Println("Delete 2 Todo: ", id)
-
-	if !bson.IsObjectIdHex(id) {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	oid := bson.ObjectIdHex(id)
-	te := Todo{}
-	json.NewDecoder(r.Body).Decode(&te)
-	log.Printf("te = %+v\n", te)
-
-	if err := tc.session.DB("TodoList").C("Todos").RemoveId(oid); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(200)
-}
-
 func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// Create empty Todo Object
-	log.Println("New Todo ")
+	log.Println("CreateTodo")
 	te := Todo{}
-
+	log.Println("Header:\n", r.Header)
+	log.Printf("r.Body = %+v\n", r.Body)
 	json.NewDecoder(r.Body).Decode(&te)
-	log.Println("Todo ", te)
+	log.Println("Todo: ", te)
 	new_te := NewTodo(te.Name)
 	log.Println("New Todo: ", new_te)
 
@@ -149,6 +130,7 @@ func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p ht
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.WriteHeader(201)
+	// w.WriteHeader(500)
 	fmt.Fprintf(w, "%s", tej)
 }
 
@@ -192,7 +174,8 @@ func main() {
 	tc := NewTodoController(getSession())
 	tc.session.DB("TodoList").C("Todos").DropCollection()
 	tc.session.DB("TodoList").C("Todos").Insert(t1, t2)
-	r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/web"))
+	// r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/web"))
+	r.ServeFiles("/web/*filepath", http.Dir("/home/oliver/coding/gocode/src/todo/www"))
 	r.GET("/todo/:id", tc.GetTodo)
 	r.GET("/todo", tc.GetAllTodo)
 	r.POST("/todo", tc.CreateTodo)

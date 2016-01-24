@@ -36,24 +36,18 @@ func NewTodoController(s *mgo.Session) *TodoController {
 }
 
 func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	log.Println("UpdateTodo")
 	// get parameter "id"
 	id := p.ByName("id")
-	log.Println("Update Todo: ", id)
 
 	if !bson.IsObjectIdHex(id) {
-		log.Println("Is no MongoDB Id")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	oid := bson.ObjectIdHex(id)
 	te := Todo{}
-	log.Println("OID ", oid)
 	json.NewDecoder(r.Body).Decode(&te)
-	log.Printf("te = %+v\n", te)
 	if err := tc.session.DB("TodoList").C("Todos").UpdateId(oid, te); err != nil {
-		log.Println("Can't find that baby in collection.")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -66,10 +60,8 @@ func (tc TodoController) UpdateTodo(w http.ResponseWriter, r *http.Request, p ht
 }
 
 func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	log.Println("GetTodo")
 	// get parameter "id"
 	id := p.ByName("id")
-	log.Println("Get Todo: ", id)
 
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
@@ -91,10 +83,8 @@ func (tc TodoController) GetTodo(w http.ResponseWriter, r *http.Request, p httpr
 }
 
 func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	log.Println("DeleteTodo")
 	// get parameter "id"
 	id := p.ByName("id")
-	log.Println("Delete Todo: ", id)
 
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
@@ -113,19 +103,11 @@ func (tc TodoController) DeleteTodo(w http.ResponseWriter, r *http.Request, p ht
 
 func (tc TodoController) CreateTodo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// Create empty Todo Object
-	log.Println("CreateTodo")
 	te := Todo{}
-	log.Println("Header:\n", r.Header)
-	log.Printf("r.Body = %+v\n", r.Body)
 	json.NewDecoder(r.Body).Decode(&te)
-	log.Println("Todo: ", te)
 	new_te := NewTodo(te.Name)
-	log.Println("New Todo: ", new_te)
-
 	tc.session.DB("TodoList").C("Todos").Insert(new_te)
-
 	tej, _ := json.Marshal(new_te)
-
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")

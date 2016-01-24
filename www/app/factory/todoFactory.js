@@ -1,6 +1,6 @@
 myTodoList.factory('entryFactory',['$http', function($http) {
 
-    var urlBase = "http://127.0.0.1:8080/todo";
+    var urlBase = "http://oliver-desktop:8080/todo";
     var entryFactory = {};
     
     entryFactory.getEntries = function () {

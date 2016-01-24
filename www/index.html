@@ -2,7 +2,12 @@
 <html lang="en" ng-app="myTodoList">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="lib/static/angular-material/angular-material.css">
+
+    <!--own styles for things done on todo list-->
+    <link rel="stylesheet" href="app.css">
     <title>TodoList</title>
 </head>
 <body>
@@ -16,8 +21,8 @@
 
     <md-list>
         <md-list-item ng-repeat="todo in todos">
-            <md-checkbox class="md-primary" ng-model="todo.done"></md-checkbox>
-            {{todo.name}}
+            <md-checkbox class="md-primary"ng-model="todo.done"></md-checkbox>
+            <div class="done-{{todo.done}}">{{todo.name}}</div>
             <md-button class="md-secondary" aria-label="Delete Button" ng-click="deleteTodo(todo.id)">
                 <ng-md-icon icon="delete"></ng-md-icon>
             </md-button>

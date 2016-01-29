@@ -3,7 +3,7 @@
 FROM golang
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/todo
+ADD . /go/src/github.com/scubao/todo
 
 # Build the outyet command inside the container.
 # (You may fetch or manage dependencies here,
@@ -11,10 +11,10 @@ ADD . /go/src/todo
 RUN go get github.com/julienschmidt/httprouter
 RUN go get gopkg.in/mgo.v2
 RUN go get gopkg.in/mgo.v2/bson
-RUN go install todo/main
+RUN go install github.com/scubao/todo
 
 # Run the outyet command by default when the container starts.
-ENTRYPOINT /go/bin/backend
+ENTRYPOINT /go/bin/todo
 
 # Document that the service listens on port 8080.
 EXPOSE 8080
